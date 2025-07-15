@@ -1,0 +1,44 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Scanner;
+
+public class WeatherApp {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter city name: ");
+        String city = scanner.nextLine();
+
+        String apiKey = "your_api_key_here"; // Replace with your actual API key
+        String apiUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + city +
+                        "&appid=" + apiKey + "&units=metric";
+
+        try {
+            URL url = new URL(apiUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(
+                new InputStreamReader(conn.getInputStream())
+            );
+
+            String line;
+            StringBuilder response = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+
+            reader.close();
+
+            System.out.println("Weather Data:");
+            System.out.println(response.toString());
+
+        } catch (Exception e) {
+            System.out.println("Error fetching weather data: " + e.getMessage());
+        }
+
+        scanner.close();
+    }
+}
